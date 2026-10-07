@@ -275,34 +275,19 @@ var seciliIndex = 0;
 
 async function bilgileriGetir(){
   videoLinkleri = Array.isArray(window.VIDEOLAR) ? window.VIDEOLAR : [];
-  sarkilar = [];
+  sarkilar = videoLinkleri
+    .map(function(url){
+      return {
+        ad:"YouTube Videosu",
+        sanatci:"YouTube",
+        url:String(url||"").trim()
+      };
+    })
+    .filter(function(x){
+      return !!videoIdBul(x.url);
+    });
 
-  for(var i=0;i<videoLinkleri.length;i++){
-    var url = videoLinkleri[i];
-    var id = videoIdBul(url);
-
-    if(!id) continue;
-
-    try{
-      var cevap = await fetch(
-        "https://www.youtube.com/oembed?url="+encodeURIComponent(url)+"&format=json"
-      );
-      var bilgi = await cevap.json();
-
-      sarkilar.push({
-        ad: bilgi.title || "YouTube Videosu",
-        sanatci: bilgi.author_name || "YouTube",
-        url: url
-      });
-    }catch(e){
-      sarkilar.push({
-        ad: "YouTube Videosu",
-        sanatci: "YouTube",
-        url: url
-      });
-    }
-  }
-
+  /* Listeyi hemen göster; YouTube başlığını bekleme. */
   listeyiOlustur();
 
   if(sarkilar.length){
@@ -310,6 +295,28 @@ async function bilgileriGetir(){
   }else{
     document.getElementById("sarkiAdi").textContent="Video ekleyin";
   }
+
+  /* Başlıkları arka planda al. Başlık alınamazsa liste yine çalışır. */
+  sarkilar.forEach(async function(sarki,index){
+    try{
+      var cevap=await fetch(
+        "https://www.youtube.com/oembed?url="+encodeURIComponent(sarki.url)+"&format=json"
+      );
+      if(!cevap.ok) throw new Error("oEmbed");
+      var bilgi=await cevap.json();
+
+      if(bilgi.title) sarki.ad=bilgi.title;
+      if(bilgi.author_name) sarki.sanatci=bilgi.author_name;
+
+      listeyiOlustur();
+
+      if(index===seciliIndex && !oynatici.getPlayerState){
+        document.getElementById("sarkiAdi").textContent=sarki.ad;
+      }
+    }catch(e){
+      /* Başlık alınamazsa varsayılan ad ile devam */
+    }
+  });
 
   if(window.ytHazir) ilkVideoyuHazirla();
 }
@@ -353,8 +360,11 @@ function listeyiOlustur(){
     buton.className="sarki-item";
     buton.innerHTML=
       '<div class="sarki-numara">'+String(index+1).padStart(2,"0")+'</div>'+
-      '<div class="sarki-ad">'+(sarki.ad || "İsimsiz")+'</div>'+
-      '<div class="sarki-alt">'+(sarki.sanatci || "YouTube")+'</div>';
+      '<div class="sarki-ad"></div>'+
+      '<div class="sarki-alt"></div>';
+
+    buton.querySelector(".sarki-ad").textContent=sarki.ad || "YouTube Videosu";
+    buton.querySelector(".sarki-alt").textContent=sarki.sanatci || "YouTube";
 
     buton.onclick=function(){
       sarkiAc(index);
@@ -492,7 +502,7 @@ document.getElementById("listeKapat").onclick=function(){
 listeyiOlustur();
 </script>
 
-<script src="videolar.js"></script>
+<script src="videolar.js?v=3"></script>
 <script>
 bilgileriGetir();
 </script>

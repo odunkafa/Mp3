@@ -1,14 +1,12 @@
 /*
   SADECE YOUTUBE LINKLERINI BURAYA EKLE.
 
-  Ornek:
-  window.VIDEOLAR = [
-    "https://youtu.be/qucA94Pz4Rk",
-    "https://youtu.be/XXXXXXXXXXX"
-  ];
+  Yeni video eklemek:
+  1) Yeni satır aç.
+  2) YouTube linkini tırnak içine yaz.
+  3) Önceki satırın sonuna virgül koy.
 
-  Yeni link eklerken satirin sonuna virgul koy.
-  Son linkte virgul olmak zorunda degil.
+  Başka hiçbir bilgi yazmana gerek yok.
 */
 
 window.VIDEOLAR = [
