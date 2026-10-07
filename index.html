@@ -269,11 +269,12 @@ button:active{
 var oynatici=null;
 var takip=null;
 /* videolar.js içindeki SADECE URL listesi */
-var videoLinkleri = window.VIDEOLAR || [];
+var videoLinkleri = [];
 var sarkilar = [];
 var seciliIndex = 0;
 
 async function bilgileriGetir(){
+  videoLinkleri = Array.isArray(window.VIDEOLAR) ? window.VIDEOLAR : [];
   sarkilar = [];
 
   for(var i=0;i<videoLinkleri.length;i++){

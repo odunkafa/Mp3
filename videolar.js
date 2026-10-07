@@ -1,17 +1,16 @@
 /*
-  SADECE YOUTUBE LİNKLERİNİ BURAYA EKLE.
+  SADECE YOUTUBE LINKLERINI BURAYA EKLE.
 
-  Her yeni linki ayrı bir satıra yaz.
-  Şarkı adı ve sanatçı bilgisi YouTube'dan otomatik alınır.
+  Ornek:
+  window.VIDEOLAR = [
+    "https://youtu.be/qucA94Pz4Rk",
+    "https://youtu.be/XXXXXXXXXXX"
+  ];
 
-  Örnek:
-  "https://youtu.be/xxxxxxxxxxx",
+  Yeni link eklerken satirin sonuna virgul koy.
+  Son linkte virgul olmak zorunda degil.
 */
 
 window.VIDEOLAR = [
-  "https://youtu.be/qucA94Pz4Rk",
-
-  "https://youtu.be/GjRgAJtmfDo",
-
-  "https://youtu.be/VIDEO_ID_BURAYA"
+  "https://youtu.be/qucA94Pz4Rk"
 ];
