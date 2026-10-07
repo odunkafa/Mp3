@@ -4,263 +4,562 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>MP3 Çalar</title>
+
 <style>
-*{box-sizing:border-box}
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
 html,body{
-  margin:0;padding:0;width:100%;height:100%;
+  margin:0;
+  width:100%;
+  height:100%;
   overflow:hidden;
   background:#f3e5c5;
   color:#17233b;
-  font-family:Arial,sans-serif;
+  font-family:Arial,Helvetica,sans-serif;
 }
+
 body{
   display:flex;
   justify-content:center;
-  align-items:flex-start;
+  align-items:stretch;
 }
-.cr{
+
+button,
+input{
+  font:inherit;
+}
+
+button{
+  outline:none;
+  -webkit-appearance:none;
+  appearance:none;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+button:focus,
+button:active{
+  outline:none!important;
+}
+
+button::-moz-focus-inner{
+  border:0;
+}
+
+button:focus-visible{
+  outline:0!important;
+  box-shadow:none;
+}
+
+.player{
   width:100%;
-  max-width:600px;
-  height:100vh;
-  padding:18px 14px;
-  background:#fff8e8;
-  border:5px solid #17233b;
-  border-radius:30px;
-  box-shadow:9px 9px 0 #17233b;
-  overflow:hidden;
-  position:relative;
-}
-.cr-ust{
+  height:100%;
+  min-height:100svh;
+  padding:
+    max(14px,env(safe-area-inset-top))
+    max(14px,env(safe-area-inset-right))
+    max(14px,env(safe-area-inset-bottom))
+    max(14px,env(safe-area-inset-left));
   display:flex;
-  justify-content:space-between;
+  flex-direction:column;
+  position:relative;
+  overflow:hidden;
 }
-.cr-ikon{
-  width:58px;height:58px;
+
+/* ÜST */
+.topbar{
+  height:clamp(56px,9vh,82px);
+  display:flex;
+  align-items:center;
+  flex:0 0 auto;
+}
+
+.menu-button{
+  width:clamp(50px,7vw,64px);
+  height:clamp(50px,7vw,64px);
   border:5px solid #17233b;
   border-radius:18px;
   background:#f7cf62;
-  box-shadow:5px 5px 0 #17233b;
-  font-size:27px;
   color:#17233b;
+  box-shadow:5px 5px 0 #17233b;
+  display:grid;
+  place-items:center;
   cursor:pointer;
-}
-.cr-baslik{
-  text-align:center;
-  font-size:42px;
+  font-size:clamp(25px,4vw,32px);
   line-height:1;
-  font-weight:900;
-  margin:25px 0 8px;
-  text-shadow:4px 4px #f7cf62;
 }
-.cr-alt{
-  text-align:center;
-  font-size:12px;
-  font-weight:900;
-  letter-spacing:2px;
-  margin-bottom:25px;
+
+.menu-button:active{
+  transform:translate(3px,3px);
+  box-shadow:2px 2px 0 #17233b;
 }
-.cr-video{
+
+/* ANA İÇERİK */
+.main{
   width:100%;
-  aspect-ratio:16/9;
-  background:#111;
-  border:6px solid #17233b;
-  border-radius:25px;
-  overflow:hidden;
-  box-shadow:7px 7px 0 #17233b;
+  max-width:1100px;
+  margin:0 auto;
+  flex:1 1 auto;
+  min-height:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:clamp(12px,2.2vh,24px);
 }
-#youtube-player{width:100%;height:100%}
-.cr-bilgi{text-align:center;margin:20px 0 9px}
-.cr-sarki{
-  font-size:24px;
-  line-height:1.1;
+
+/* VİDEO */
+.video-shell{
+  width:100%;
+  max-width:920px;
+  margin:0 auto;
+  aspect-ratio:16/9;
+  border:clamp(4px,0.65vw,6px) solid #17233b;
+  border-radius:clamp(20px,3vw,32px);
+  background:#111;
+  overflow:hidden;
+  box-shadow:8px 8px 0 #17233b;
+  flex:0 1 auto;
+}
+
+#youtube-player{
+  width:100%;
+  height:100%;
+}
+
+/* ŞARKI BİLGİSİ */
+.song-info{
+  width:100%;
+  text-align:center;
+  min-width:0;
+  padding:0 8px;
+}
+
+.song-title{
+  font-size:clamp(21px,3.1vw,34px);
+  line-height:1.08;
   font-weight:900;
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
 }
-.cr-durum{
-  font-size:12px;
-  font-weight:900;
-  opacity:.6;
-  margin-top:7px;
+
+.song-artist{
+  margin-top:5px;
+  font-size:clamp(12px,1.7vw,16px);
+  font-weight:800;
+  opacity:.58;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
 }
-.cr-zaman{
+
+.status{
+  margin-top:6px;
+  font-size:clamp(10px,1.4vw,13px);
+  font-weight:900;
+  letter-spacing:.8px;
+  opacity:.58;
+}
+
+/* İLERLEME */
+.progress-area{
+  width:100%;
+  max-width:920px;
+  margin:0 auto;
+}
+
+.time-row{
   display:flex;
   justify-content:space-between;
-  font-size:12px;
+  align-items:center;
+  font-size:clamp(11px,1.5vw,14px);
   font-weight:900;
-  margin:8px 2px;
+  margin:0 2px 7px;
 }
-.cr-progress{
+
+.progress{
+  display:block;
   width:100%;
-  height:11px;
+  height:clamp(9px,1.4vw,13px);
+  margin:0;
   appearance:none;
+  -webkit-appearance:none;
   border:3px solid #17233b;
-  border-radius:20px;
-  background:#d5d0c2;
+  border-radius:99px;
+  background:#d8d1c2;
+  outline:none;
 }
-.cr-progress::-webkit-slider-thumb{
+
+.progress:focus{
+  outline:none;
+}
+
+.progress::-webkit-slider-thumb{
   appearance:none;
-  width:23px;height:23px;
+  -webkit-appearance:none;
+  width:clamp(20px,3vw,27px);
+  height:clamp(20px,3vw,27px);
   border:3px solid #17233b;
   border-radius:50%;
   background:#f7cf62;
-}
-.cr-kontroller{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:22px;
-  margin:22px 0;
-}
-.cr-btn{
-  width:70px;height:70px;
-  border:5px solid #17233b;
-  border-radius:50%;
-  background:#fff8e8;
-  box-shadow:6px 6px 0 #17233b;
-  font-size:17px;
-  font-weight:900;
-  color:#17233b;
   cursor:pointer;
 }
-.cr-play{
-  width:92px;height:92px;
+
+.progress::-moz-range-thumb{
+  width:clamp(20px,3vw,27px);
+  height:clamp(20px,3vw,27px);
+  border:3px solid #17233b;
+  border-radius:50%;
   background:#f7cf62;
-  font-size:0;
+  cursor:pointer;
 }
-.cr-play::before{content:"▶";font-size:34px}
-.cr-play.oynuyor::before{content:"Ⅱ";font-size:34px}
-.cr-ses{
-  display:flex;
+
+/* KONTROLLER */
+.controls{
+  width:100%;
+  display:grid;
+  grid-template-columns:repeat(5,minmax(0,1fr));
   align-items:center;
-  gap:10px;
+  gap:clamp(7px,2vw,18px);
+  max-width:760px;
+  margin:0 auto;
 }
-.cr-ses input{flex:1}
-button:active{
+
+.control{
+  width:min(100%,clamp(50px,10vw,76px));
+  aspect-ratio:1;
+  justify-self:center;
+  border:clamp(3px,0.55vw,5px) solid #17233b;
+  border-radius:50%;
+  background:#fff8e8;
+  color:#17233b;
+  box-shadow:6px 6px 0 #17233b;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  font-weight:900;
+  font-size:clamp(12px,2.2vw,18px);
+  line-height:1;
+}
+
+.control:active{
   transform:translate(3px,3px);
   box-shadow:2px 2px 0 #17233b;
 }
 
-/* ŞARKI LİSTESİ */
-.liste-panel{
+.control.play{
+  width:min(100%,clamp(70px,13vw,100px));
+  background:#f7cf62;
+  font-size:0;
+}
+
+.control.play::before{
+  content:"▶";
+  font-size:clamp(25px,4.5vw,39px);
+  margin-left:4px;
+}
+
+.control.play.oynuyor::before{
+  content:"Ⅱ";
+  margin-left:0;
+}
+
+/* SES */
+.volume-area{
+  width:100%;
+  max-width:760px;
+  margin:0 auto;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+
+.volume-icon{
+  width:32px;
+  flex:0 0 32px;
+  font-size:24px;
+  text-align:center;
+  filter:grayscale(1);
+}
+
+.volume{
+  width:100%;
+  height:10px;
+  appearance:none;
+  -webkit-appearance:none;
+  border:2px solid #17233b;
+  border-radius:99px;
+  background:#e1ddd3;
+  outline:none;
+}
+
+.volume::-webkit-slider-thumb{
+  appearance:none;
+  -webkit-appearance:none;
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  background:#187bea;
+  cursor:pointer;
+}
+
+.volume::-moz-range-thumb{
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  border:0;
+  background:#187bea;
+  cursor:pointer;
+}
+
+/* LİSTE */
+.list-panel{
   position:absolute;
   inset:0;
-  z-index:20;
+  z-index:50;
   display:none;
   background:#fff8e8;
-  padding:18px;
+  padding:
+    max(18px,env(safe-area-inset-top))
+    max(18px,env(safe-area-inset-right))
+    max(18px,env(safe-area-inset-bottom))
+    max(18px,env(safe-area-inset-left));
 }
-.liste-panel.acik{display:block}
-.liste-ust{
+
+.list-panel.open{
+  display:flex;
+  flex-direction:column;
+}
+
+.list-header{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:15px;
+  flex:0 0 auto;
+  margin-bottom:16px;
 }
-.liste-baslik{
-  font-size:28px;
+
+.list-title{
+  font-size:clamp(25px,5vw,36px);
   font-weight:900;
 }
-.kapat{
-  width:48px;height:48px;
+
+.close-button{
+  width:50px;
+  height:50px;
   border:4px solid #17233b;
   border-radius:15px;
   background:#f7cf62;
-  box-shadow:4px 4px 0 #17233b;
-  font-size:24px;
-  font-weight:900;
-}
-.liste{
-  height:calc(100vh - 105px);
-  overflow-y:auto;
-  padding:3px 5px 20px 2px;
-}
-.sarki-item{
-  width:100%;
-  text-align:left;
-  border:4px solid #17233b;
-  border-radius:16px;
-  background:#fff;
-  box-shadow:4px 4px 0 #17233b;
-  padding:14px;
-  margin:0 0 12px;
   color:#17233b;
-  cursor:pointer;
-}
-.sarki-item.aktif{background:#f7cf62}
-.sarki-numara{
-  font-size:11px;
+  box-shadow:4px 4px 0 #17233b;
+  font-size:27px;
   font-weight:900;
-  opacity:.55;
-}
-.sarki-ad{
-  font-size:18px;
-  font-weight:900;
-  margin-top:3px;
-}
-.sarki-alt{
-  font-size:11px;
-  font-weight:700;
-  margin-top:4px;
-  opacity:.65;
 }
 
-@media(max-width:500px){
-  .cr{padding:15px 11px}
-  .cr-baslik{font-size:34px;margin-top:22px}
-  .cr-alt{margin-bottom:18px}
-  .cr-video{border-width:5px}
-  .cr-sarki{font-size:21px}
-  .cr-kontroller{gap:16px;margin:18px 0}
-  .cr-btn{width:64px;height:64px}
-  .cr-play{width:84px;height:84px}
+.close-button:active{
+  transform:translate(3px,3px);
+  box-shadow:1px 1px 0 #17233b;
+}
+
+.list{
+  flex:1 1 auto;
+  min-height:0;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding:3px 5px 20px 2px;
+}
+
+.song-item{
+  width:100%;
+  min-height:68px;
+  display:block;
+  text-align:left;
+  border:4px solid #17233b;
+  border-radius:17px;
+  background:#fff;
+  color:#17233b;
+  box-shadow:4px 4px 0 #17233b;
+  padding:12px 14px;
+  margin:0 0 13px;
+}
+
+.song-item:active{
+  transform:translate(2px,2px);
+  box-shadow:2px 2px 0 #17233b;
+}
+
+.song-item.active{
+  background:#f7cf62;
+}
+
+.song-number{
+  font-size:10px;
+  font-weight:900;
+  opacity:.5;
+}
+
+.song-name{
+  font-size:17px;
+  font-weight:900;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.song-channel{
+  font-size:11px;
+  font-weight:700;
+  opacity:.58;
+  margin-top:3px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+/* KISA TELEFONLAR */
+@media(max-height:700px){
+  .player{
+    padding-top:max(8px,env(safe-area-inset-top));
+    padding-bottom:max(8px,env(safe-area-inset-bottom));
+  }
+
+  .topbar{
+    height:50px;
+  }
+
+  .menu-button{
+    width:48px;
+    height:48px;
+    border-width:4px;
+    box-shadow:4px 4px 0 #17233b;
+  }
+
+  .main{
+    gap:9px;
+  }
+
+  .song-artist{
+    margin-top:2px;
+  }
+
+  .status{
+    margin-top:3px;
+  }
+
+  .controls{
+    gap:5px;
+  }
+
+  .volume-area{
+    margin-top:1px;
+  }
+}
+
+/* ÇOK DAR TELEFONLAR */
+@media(max-width:360px){
+  .player{
+    padding-left:9px;
+    padding-right:9px;
+  }
+
+  .video-shell{
+    box-shadow:6px 6px 0 #17233b;
+  }
+
+  .controls{
+    gap:4px;
+  }
+
+  .control{
+    box-shadow:4px 4px 0 #17233b;
+    border-width:3px;
+  }
+
+  .control.play{
+    box-shadow:5px 5px 0 #17233b;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<div class="cr">
+<div class="player">
 
-  <div class="cr-ust">
-    <button class="cr-ikon" id="listeAc" type="button" aria-label="Şarkı listesi">☰</button>
+  <div class="topbar">
+    <button class="menu-button" id="listeAc" type="button" aria-label="Şarkı listesi">☰</button>
   </div>
 
-  <div class="cr-video">
-    <div id="youtube-player"></div>
-  </div>
+  <main class="main">
 
-  <div class="cr-bilgi">
-    <div class="cr-sarki" id="sarkiAdi">Şarkı seçin</div>
-    <div class="cr-durum" id="durum">HAZIRLANIYOR...</div>
-  </div>
-
-  <div class="cr-zaman">
-    <span id="gecen">00:00</span>
-    <span id="toplam">00:00</span>
-  </div>
-
-  <input id="progress" class="cr-progress"
-         type="range" min="0" max="100" value="0" step="0.1">
-
-  <div class="cr-kontroller">
-    <button id="geri" class="cr-btn" type="button">−10</button>
-    <button id="oynat" class="cr-btn cr-play" type="button" aria-label="Oynat"></button>
-    <button id="ileri" class="cr-btn" type="button">+10</button>
-  </div>
-
-  <div class="cr-ses">
-    <span>🔊</span>
-    <input id="ses" type="range" min="0" max="100" value="100">
-  </div>
-
-  <!-- Liste paneli -->
-  <div class="liste-panel" id="listePanel">
-    <div class="liste-ust">
-      <div class="liste-baslik">ŞARKILAR</div>
-      <button class="kapat" id="listeKapat" type="button">×</button>
+    <div class="video-shell">
+      <div id="youtube-player"></div>
     </div>
-    <div class="liste" id="liste"></div>
+
+    <section class="song-info">
+      <div class="song-title" id="sarkiAdi">Şarkı seçin</div>
+      <div class="song-artist" id="sanatci">YouTube</div>
+      <div class="status" id="durum">HAZIRLANIYOR...</div>
+    </section>
+
+    <div class="progress-area">
+      <div class="time-row">
+        <span id="gecen">00:00</span>
+        <span id="toplam">00:00</span>
+      </div>
+
+      <input
+        id="progress"
+        class="progress"
+        type="range"
+        min="0"
+        max="100"
+        value="0"
+        step="0.1"
+        aria-label="Şarkı ilerlemesi">
+    </div>
+
+    <div class="controls">
+
+      <button id="onceki" class="control" type="button" aria-label="Önceki şarkı">◀|</button>
+
+      <button id="geri" class="control" type="button" aria-label="10 saniye geri">−10</button>
+
+      <button id="oynat" class="control play" type="button" aria-label="Oynat"></button>
+
+      <button id="ileri" class="control" type="button" aria-label="10 saniye ileri">+10</button>
+
+      <button id="sonraki" class="control" type="button" aria-label="Sonraki şarkı">|▶</button>
+
+    </div>
+
+    <div class="volume-area">
+      <div class="volume-icon">🔊</div>
+      <input
+        id="ses"
+        class="volume"
+        type="range"
+        min="0"
+        max="100"
+        value="100"
+        aria-label="Ses seviyesi">
+    </div>
+
+  </main>
+
+  <div class="list-panel" id="listePanel">
+
+    <div class="list-header">
+      <div class="list-title">ŞARKILAR</div>
+      <button class="close-button" id="listeKapat" type="button" aria-label="Listeyi kapat">×</button>
+    </div>
+
+    <div class="list" id="liste"></div>
+
   </div>
 
 </div>
@@ -268,103 +567,71 @@ button:active{
 <script>
 var oynatici=null;
 var takip=null;
-/* videolar.js içindeki SADECE URL listesi */
-var videoLinkleri = [];
-var sarkilar = [];
-var seciliIndex = 0;
-
-async function bilgileriGetir(){
-  videoLinkleri = Array.isArray(window.VIDEOLAR) ? window.VIDEOLAR : [];
-  sarkilar = videoLinkleri
-    .map(function(url){
-      return {
-        ad:"YouTube Videosu",
-        sanatci:"YouTube",
-        url:String(url||"").trim()
-      };
-    })
-    .filter(function(x){
-      return !!videoIdBul(x.url);
-    });
-
-  /* Listeyi hemen göster; YouTube başlığını bekleme. */
-  listeyiOlustur();
-
-  if(sarkilar.length){
-    document.getElementById("sarkiAdi").textContent=sarkilar[0].ad;
-  }else{
-    document.getElementById("sarkiAdi").textContent="Video ekleyin";
-  }
-
-  /* Başlıkları arka planda al. Başlık alınamazsa liste yine çalışır. */
-  sarkilar.forEach(async function(sarki,index){
-    try{
-      var cevap=await fetch(
-        "https://www.youtube.com/oembed?url="+encodeURIComponent(sarki.url)+"&format=json"
-      );
-      if(!cevap.ok) throw new Error("oEmbed");
-      var bilgi=await cevap.json();
-
-      if(bilgi.title) sarki.ad=bilgi.title;
-      if(bilgi.author_name) sarki.sanatci=bilgi.author_name;
-
-      listeyiOlustur();
-
-      if(index===seciliIndex && !oynatici.getPlayerState){
-        document.getElementById("sarkiAdi").textContent=sarki.ad;
-      }
-    }catch(e){
-      /* Başlık alınamazsa varsayılan ad ile devam */
-    }
-  });
-
-  if(window.ytHazir) ilkVideoyuHazirla();
-}
-
-function ilkVideoyuHazirla(){
-  if(!oynatici || !sarkilar.length) return;
-  var id=videoIdBul(sarkilar[0].url);
-  if(id) oynatici.cueVideoById(id);
-  aktifListeyiGuncelle();
-}
+var seciliIndex=0;
+var videoLinkleri=[];
+var sarkilar=[];
+window.ytHazir=false;
 
 function videoIdBul(url){
   if(!url)return "";
-  url=url.trim();
 
-  /* Direkt ID yazılmışsa */
-  if(/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+  url=String(url).trim();
 
-  var eslesme=url.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  if(/^[a-zA-Z0-9_-]{11}$/.test(url)){
+    return url;
+  }
+
+  var eslesme=url.match(
+    /(?:youtu\\.be\\/|youtube\\.com\\/watch\\?v=|youtube\\.com\\/embed\\/|youtube\\.com\\/shorts\\/)([a-zA-Z0-9_-]{11})/
+  );
+
   return eslesme ? eslesme[1] : "";
 }
 
 function formatSure(s){
   s=Math.floor(s||0);
+
   var dakika=Math.floor(s/60);
   var saniye=s%60;
+
   return String(dakika).padStart(2,"0")+":"+String(saniye).padStart(2,"0");
 }
 
 function listeyiOlustur(){
+
   var kutu=document.getElementById("liste");
   kutu.innerHTML="";
 
   if(!sarkilar.length){
-    kutu.innerHTML='<div style="font-weight:900;padding:20px">videolar.js içine YouTube videolarını ekleyin.</div>';
+
+    kutu.innerHTML=
+      '<div style="font-weight:900;padding:20px">videolar.js içine YouTube linki ekleyin.</div>';
+
     return;
   }
 
   sarkilar.forEach(function(sarki,index){
-    var buton=document.createElement("button");
-    buton.className="sarki-item";
-    buton.innerHTML=
-      '<div class="sarki-numara">'+String(index+1).padStart(2,"0")+'</div>'+
-      '<div class="sarki-ad"></div>'+
-      '<div class="sarki-alt"></div>';
 
-    buton.querySelector(".sarki-ad").textContent=sarki.ad || "YouTube Videosu";
-    buton.querySelector(".sarki-alt").textContent=sarki.sanatci || "YouTube";
+    var buton=document.createElement("button");
+
+    buton.type="button";
+    buton.className="song-item";
+
+    var numara=document.createElement("div");
+    numara.className="song-number";
+    numara.textContent=String(index+1).padStart(2,"0");
+
+    var ad=document.createElement("div");
+    ad.className="song-name";
+    ad.textContent=sarki.ad || "YouTube Videosu";
+
+    var kanal=document.createElement("div");
+    kanal.className="song-channel";
+    kanal.textContent=sarki.sanatci || "YouTube";
+
+    buton.appendChild(numara);
+    buton.appendChild(ad);
+    buton.appendChild(kanal);
 
     buton.onclick=function(){
       sarkiAc(index);
@@ -372,18 +639,43 @@ function listeyiOlustur(){
 
     kutu.appendChild(buton);
   });
+
+  aktifListeyiGuncelle();
 }
 
 function aktifListeyiGuncelle(){
-  document.querySelectorAll(".sarki-item").forEach(function(el,i){
-    el.classList.toggle("aktif",i===seciliIndex);
+
+  document.querySelectorAll(".song-item").forEach(function(el,index){
+
+    el.classList.toggle(
+      "active",
+      index===seciliIndex
+    );
+
   });
 }
 
-function sarkiAc(index){
+function ekraniGuncelle(){
+
+  if(!sarkilar.length)return;
+
+  var sarki=sarkilar[seciliIndex];
+
+  document.getElementById("sarkiAdi").textContent=
+    sarki.ad || "YouTube Videosu";
+
+  document.getElementById("sanatci").textContent=
+    sarki.sanatci || "YouTube";
+
+  aktifListeyiGuncelle();
+}
+
+function sarkiAc(index,otomatikOynat){
+
   if(!sarkilar[index] || !oynatici)return;
 
   seciliIndex=index;
+
   var id=videoIdBul(sarkilar[index].url);
 
   if(!id){
@@ -391,63 +683,212 @@ function sarkiAc(index){
     return;
   }
 
-  document.getElementById("sarkiAdi").textContent=sarkilar[index].ad || "İsimsiz";
-  document.getElementById("durum").textContent="YÜKLENİYOR...";
+  ekraniGuncelle();
+
   document.getElementById("progress").value=0;
   document.getElementById("gecen").textContent="00:00";
   document.getElementById("toplam").textContent="00:00";
+  document.getElementById("durum").textContent="YÜKLENİYOR...";
 
-  oynatici.loadVideoById(id);
-  aktifListeyiGuncelle();
-  document.getElementById("listePanel").classList.remove("acik");
+  if(otomatikOynat){
+    oynatici.loadVideoById(id);
+  }else{
+    oynatici.cueVideoById(id);
+  }
+
+  document.getElementById("listePanel").classList.remove("open");
+}
+
+function sonrakiSarki(){
+
+  if(!sarkilar.length)return;
+
+  var yeni=(seciliIndex+1)%sarkilar.length;
+
+  sarkiAc(yeni,true);
+}
+
+function oncekiSarki(){
+
+  if(!sarkilar.length)return;
+
+  var yeni=(seciliIndex-1+sarkilar.length)%sarkilar.length;
+
+  sarkiAc(yeni,true);
+}
+
+function bilgileriGetir(){
+
+  videoLinkleri=
+    Array.isArray(window.VIDEOLAR)
+      ? window.VIDEOLAR
+      : [];
+
+  sarkilar=videoLinkleri
+    .map(function(url){
+
+      return {
+        ad:"YouTube Videosu",
+        sanatci:"YouTube",
+        url:String(url||"").trim()
+      };
+
+    })
+    .filter(function(sarki){
+
+      return !!videoIdBul(sarki.url);
+
+    });
+
+  listeyiOlustur();
+
+  if(sarkilar.length){
+
+    ekraniGuncelle();
+
+  }else{
+
+    document.getElementById("sarkiAdi").textContent="Video ekleyin";
+    document.getElementById("durum").textContent="LİSTE BOŞ";
+
+  }
+
+  /* Başlıkları arka planda al. */
+  sarkilar.forEach(function(sarki,index){
+
+    fetch(
+      "https://www.youtube.com/oembed?url="+
+      encodeURIComponent(sarki.url)+
+      "&format=json"
+    )
+    .then(function(cevap){
+
+      if(!cevap.ok)throw new Error("oEmbed");
+
+      return cevap.json();
+
+    })
+    .then(function(bilgi){
+
+      if(bilgi.title)sarki.ad=bilgi.title;
+      if(bilgi.author_name)sarki.sanatci=bilgi.author_name;
+
+      listeyiOlustur();
+
+      if(index===seciliIndex){
+        ekraniGuncelle();
+      }
+
+    })
+    .catch(function(){
+
+      /* Başlık alınamazsa varsayılan adla devam. */
+
+    });
+
+  });
+
+  if(window.ytHazir){
+    ilkVideoyuHazirla();
+  }
+}
+
+function ilkVideoyuHazirla(){
+
+  if(!oynatici || !sarkilar.length)return;
+
+  var id=videoIdBul(sarkilar[0].url);
+
+  if(id){
+    oynatici.cueVideoById(id);
+  }
+
+  ekraniGuncelle();
 }
 
 function onYouTubeIframeAPIReady(){
+
   window.ytHazir=true;
 
   oynatici=new YT.Player("youtube-player",{
+
     videoId:"",
+
     width:"100%",
     height:"100%",
+
     playerVars:{
       controls:0,
       rel:0,
       playsinline:1,
       modestbranding:1
     },
+
     events:{
+
       onReady:function(){
-        document.getElementById("durum").textContent="HAZIR";
+
         oynatici.setVolume(100);
+
+        document.getElementById("durum").textContent=
+          "HAZIR";
+
         takipBaslat();
+
         ilkVideoyuHazirla();
+
       },
+
       onStateChange:function(e){
-        var buton=document.getElementById("oynat");
+
+        var buton=
+          document.getElementById("oynat");
 
         if(e.data===YT.PlayerState.PLAYING){
+
           buton.classList.add("oynuyor");
-          document.getElementById("durum").textContent="ÇALIYOR";
+
+          document.getElementById("durum").textContent=
+            "ÇALIYOR";
+
         }
 
         if(e.data===YT.PlayerState.PAUSED){
+
           buton.classList.remove("oynuyor");
-          document.getElementById("durum").textContent="DURAKLATILDI";
+
+          document.getElementById("durum").textContent=
+            "DURAKLATILDI";
+
         }
 
         if(e.data===YT.PlayerState.ENDED){
+
           buton.classList.remove("oynuyor");
-          document.getElementById("durum").textContent="BİTTİ";
+
+          document.getElementById("durum").textContent=
+            "BİTTİ";
+
+          /* Şarkı bitince sonraki şarkıya geç. */
+          if(sarkilar.length>1){
+            sonrakiSarki();
+          }
+
         }
+
       }
+
     }
+
   });
 }
 
 function takipBaslat(){
+
   clearInterval(takip);
 
   takip=setInterval(function(){
+
     if(!oynatici || !oynatici.getDuration)return;
 
     var mevcut=oynatici.getCurrentTime();
@@ -455,56 +896,144 @@ function takipBaslat(){
 
     if(!toplam)return;
 
-    document.getElementById("gecen").textContent=formatSure(mevcut);
-    document.getElementById("toplam").textContent=formatSure(toplam);
-    document.getElementById("progress").value=(mevcut/toplam)*100;
+    document.getElementById("gecen").textContent=
+      formatSure(mevcut);
+
+    document.getElementById("toplam").textContent=
+      formatSure(toplam);
+
+    document.getElementById("progress").value=
+      (mevcut/toplam)*100;
+
   },300);
 }
 
 document.getElementById("oynat").onclick=function(){
+
   if(!oynatici)return;
 
   var durum=oynatici.getPlayerState();
 
-  if(durum===YT.PlayerState.PLAYING) oynatici.pauseVideo();
-  else oynatici.playVideo();
+  if(durum===YT.PlayerState.PLAYING){
+
+    oynatici.pauseVideo();
+
+  }else{
+
+    oynatici.playVideo();
+
+  }
+
 };
 
 document.getElementById("geri").onclick=function(){
+
   if(!oynatici)return;
-  oynatici.seekTo(Math.max(0,oynatici.getCurrentTime()-10),true);
+
+  oynatici.seekTo(
+    Math.max(0,oynatici.getCurrentTime()-10),
+    true
+  );
+
 };
 
 document.getElementById("ileri").onclick=function(){
+
   if(!oynatici)return;
-  oynatici.seekTo(oynatici.getCurrentTime()+10,true);
+
+  oynatici.seekTo(
+    oynatici.getCurrentTime()+10,
+    true
+  );
+
+};
+
+document.getElementById("onceki").onclick=function(){
+  oncekiSarki();
+};
+
+document.getElementById("sonraki").onclick=function(){
+  sonrakiSarki();
 };
 
 document.getElementById("progress").oninput=function(){
+
   if(!oynatici)return;
+
   var toplam=oynatici.getDuration();
-  if(toplam) oynatici.seekTo(toplam*(Number(this.value)/100),true);
+
+  if(toplam){
+
+    oynatici.seekTo(
+      toplam*(Number(this.value)/100),
+      true
+    );
+
+  }
+
 };
 
 document.getElementById("ses").oninput=function(){
+
   if(!oynatici)return;
-  oynatici.setVolume(Number(this.value));
+
+  oynatici.setVolume(
+    Number(this.value)
+  );
+
 };
 
 document.getElementById("listeAc").onclick=function(){
-  document.getElementById("listePanel").classList.add("acik");
+
+  document.getElementById("listePanel")
+    .classList.add("open");
+
 };
 
 document.getElementById("listeKapat").onclick=function(){
-  document.getElementById("listePanel").classList.remove("acik");
+
+  document.getElementById("listePanel")
+    .classList.remove("open");
+
 };
 
-listeyiOlustur();
-</script>
+document.addEventListener("keydown",function(e){
 
-<script src="videolar.js?v=3"></script>
-<script>
-bilgileriGetir();
+  if(e.key==="Escape"){
+
+    document.getElementById("listePanel")
+      .classList.remove("open");
+
+  }
+
+});
+
+/* Güncel videolar.js'i önbelleğe takılmadan yükle. */
+(function(){
+
+  var script=document.createElement("script");
+
+  script.src="videolar.js?ts="+Date.now();
+
+  script.onload=function(){
+
+    bilgileriGetir();
+
+  };
+
+  script.onerror=function(){
+
+    document.getElementById("sarkiAdi").textContent=
+      "videolar.js yüklenemedi";
+
+    document.getElementById("durum").textContent=
+      "LİSTE DOSYASI BULUNAMADI";
+
+  };
+
+  document.head.appendChild(script);
+
+})();
 </script>
 
 <script src="https://www.youtube.com/iframe_api"></script>
