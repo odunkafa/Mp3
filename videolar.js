@@ -11,5 +11,6 @@
 
 window.VIDEOLAR = [
   "https://youtu.be/qucA94Pz4Rk",
+  "https://youtu.be/nyP2Fbd80K4",
   "https://youtu.be/GjRgAJtmfDo"
 ];
