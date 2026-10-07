@@ -358,7 +358,6 @@ document.getElementById("ileri").onclick=function(){if(oynatici)oynatici.seekTo(
 document.getElementById("onceki").onclick=onceki;
 document.getElementById("sonraki").onclick=sonraki;
 document.getElementById("progress").oninput=function(){if(oynatici){var t=oynatici.getDuration();if(t)oynatici.seekTo(t*Number(this.value)/100,true)}};
-document.getElementById("ses").oninput=function(){if(oynatici)oynatici.setVolume(Number(this.value))};
 window.addEventListener("resize",basligiSigdir);
 document.getElementById("listeAc").onclick=function(){document.getElementById("listePanel").classList.add("open")};
 document.getElementById("listeKapat").onclick=function(){document.getElementById("listePanel").classList.remove("open")};
