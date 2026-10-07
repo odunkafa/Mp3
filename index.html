@@ -224,11 +224,7 @@ button:active{
 
   <div class="cr-ust">
     <button class="cr-ikon" id="listeAc" type="button" aria-label="Şarkı listesi">☰</button>
-    <button class="cr-ikon" type="button" aria-label="Favori">♥</button>
   </div>
-
-  <div class="cr-baslik">MP3 ÇALAR</div>
-  <div class="cr-alt">YOUTUBE • ÇİZGİROMAN OYNATICI</div>
 
   <div class="cr-video">
     <div id="youtube-player"></div>
@@ -272,10 +268,57 @@ button:active{
 <script>
 var oynatici=null;
 var takip=null;
-var seciliIndex=0;
+/* videolar.js içindeki SADECE URL listesi */
+var videoLinkleri = window.VIDEOLAR || [];
+var sarkilar = [];
+var seciliIndex = 0;
 
-/* videolar.js içindeki liste */
-var sarkilar = window.VIDEOLAR || [];
+async function bilgileriGetir(){
+  sarkilar = [];
+
+  for(var i=0;i<videoLinkleri.length;i++){
+    var url = videoLinkleri[i];
+    var id = videoIdBul(url);
+
+    if(!id) continue;
+
+    try{
+      var cevap = await fetch(
+        "https://www.youtube.com/oembed?url="+encodeURIComponent(url)+"&format=json"
+      );
+      var bilgi = await cevap.json();
+
+      sarkilar.push({
+        ad: bilgi.title || "YouTube Videosu",
+        sanatci: bilgi.author_name || "YouTube",
+        url: url
+      });
+    }catch(e){
+      sarkilar.push({
+        ad: "YouTube Videosu",
+        sanatci: "YouTube",
+        url: url
+      });
+    }
+  }
+
+  listeyiOlustur();
+
+  if(sarkilar.length){
+    document.getElementById("sarkiAdi").textContent=sarkilar[0].ad;
+  }else{
+    document.getElementById("sarkiAdi").textContent="Video ekleyin";
+  }
+
+  if(window.ytHazir) ilkVideoyuHazirla();
+}
+
+function ilkVideoyuHazirla(){
+  if(!oynatici || !sarkilar.length) return;
+  var id=videoIdBul(sarkilar[0].url);
+  if(id) oynatici.cueVideoById(id);
+  aktifListeyiGuncelle();
+}
 
 function videoIdBul(url){
   if(!url)return "";
@@ -349,15 +392,10 @@ function sarkiAc(index){
 }
 
 function onYouTubeIframeAPIReady(){
-  var ilkId="";
-
-  if(sarkilar.length){
-    ilkId=videoIdBul(sarkilar[0].url);
-    document.getElementById("sarkiAdi").textContent=sarkilar[0].ad || "İsimsiz";
-  }
+  window.ytHazir=true;
 
   oynatici=new YT.Player("youtube-player",{
-    videoId:ilkId,
+    videoId:"",
     width:"100%",
     height:"100%",
     playerVars:{
@@ -371,7 +409,7 @@ function onYouTubeIframeAPIReady(){
         document.getElementById("durum").textContent="HAZIR";
         oynatici.setVolume(100);
         takipBaslat();
-        aktifListeyiGuncelle();
+        ilkVideoyuHazirla();
       },
       onStateChange:function(e){
         var buton=document.getElementById("oynat");
@@ -453,15 +491,9 @@ document.getElementById("listeKapat").onclick=function(){
 listeyiOlustur();
 </script>
 
-<!-- BURADA SADECE DOSYA ADINI DEĞİŞTİRME -->
 <script src="videolar.js"></script>
 <script>
-/* videolar.js yüklendikten sonra listeyi tekrar oluştur */
-sarkilar=window.VIDEOLAR || [];
-listeyiOlustur();
-if(sarkilar.length){
-  document.getElementById("sarkiAdi").textContent=sarkilar[0].ad || "İsimsiz";
-}
+bilgileriGetir();
 </script>
 
 <script src="https://www.youtube.com/iframe_api"></script>

@@ -1,35 +1,17 @@
 /*
-  YOUTUBE VİDEOLARIN
+  SADECE YOUTUBE LİNKLERİNİ BURAYA EKLE.
 
-  Yeni şarkı eklemek için aşağıdaki yapıyı kopyala:
+  Her yeni linki ayrı bir satıra yaz.
+  Şarkı adı ve sanatçı bilgisi YouTube'dan otomatik alınır.
 
-  {
-    ad: "Şarkının adı",
-    sanatci: "Sanatçı",
-    url: "https://youtu.be/VIDEO_ID"
-  },
-
-  Virgüle dikkat et.
+  Örnek:
+  "https://youtu.be/xxxxxxxxxxx",
 */
 
 window.VIDEOLAR = [
+  "https://youtu.be/qucA94Pz4Rk",
 
-  {
-    ad: "Kukla #akustik #cover",
-    sanatci: "YouTube",
-    url: "https://youtu.be/qucA94Pz4Rk"
-  },
+  "https://youtu.be/VIDEO_ID_BURAYA",
 
-  {
-    ad: "Yeni Şarkı 1",
-    sanatci: "Sanatçı",
-    url: "https://youtu.be/VIDEO_ID_BURAYA"
-  },
-
-  {
-    ad: "Yeni Şarkı 2",
-    sanatci: "Sanatçı",
-    url: "https://www.youtube.com/watch?v=VIDEO_ID_BURAYA"
-  }
-
+  "https://youtu.be/VIDEO_ID_BURAYA"
 ];
