@@ -52,15 +52,16 @@ svg{display:block}
 .ust-btn svg{width:31px;height:31px}
 
 .ana{
- flex:1;min-height:0;width:min(100%,620px);margin:auto;
- display:flex;flex-direction:column;justify-content:center;
- gap:clamp(10px,1.7vh,18px);
+  flex:1;min-height:0;width:min(100%,620px);margin:auto;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:clamp(14px,2.4vh,24px);
 }
 .kapak{
- width:min(78vw,430px);aspect-ratio:1/1;margin:0 auto;
- border:4px solid var(--lac);border-radius:27px;overflow:hidden;
- background:#17233b;box-shadow:7px 7px 0 var(--lac);
- position:relative;
+  width:min(94vw,540px);aspect-ratio:1/1;margin:0 auto;
+  border:4px solid var(--lac);border-radius:27px;overflow:hidden;
+  background:#17233b;box-shadow:7px 7px 0 var(--lac);
+  position:relative;
+  transform:translateY(-32px);
 }
 .kapak img{width:100%;height:100%;object-fit:cover;display:block}
 .kapak::after{
@@ -74,8 +75,8 @@ svg{display:block}
 }
 .bilgi{text-align:center;padding:0 5px;min-width:0}
 .sarki{
- font-size:clamp(24px,5.2vw,38px);font-weight:900;line-height:1.08;
- white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font-size:clamp(22px,5.2vw,38px);font-weight:900;line-height:1.08;
+  white-space:nowrap;overflow:hidden;text-overflow:clip;
 }
 .sanatci{
  margin-top:5px;font-size:clamp(14px,2.8vw,19px);
@@ -104,18 +105,21 @@ svg{display:block}
  align-items:center;gap:clamp(5px,2vw,16px);width:100%;
 }
 .kontrol{
- width:min(100%,76px);aspect-ratio:1;justify-self:center;
- border:4px solid var(--lac);border-radius:50%;
- background:rgba(255,248,232,.94);color:var(--lac);
- box-shadow:5px 5px 0 var(--lac);
- display:grid;place-items:center;
+  width:min(100%,52px);aspect-ratio:1;justify-self:center;
+  border:4px solid var(--lac);border-radius:50%;
+  background:rgba(255,248,232,.94);color:var(--lac);
+  box-shadow:5px 5px 0 var(--lac);
+  display:grid;place-items:center;
 }
 .kontrol:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--lac)}
 .kontrol svg{width:39%;height:39%}
 .kontrol.text{font-size:clamp(13px,2.4vw,18px);font-weight:900}
 .kontrol.play{
- width:min(100%,94px);background:var(--sari);font-size:0;
+  width:min(100%,96px);background:var(--sari);font-size:0;
 }
+.kontroller .kontrol:nth-child(2),
+.kontroller .kontrol:nth-child(4){width:min(100%,60px)}
+.kontroller .kontrol:nth-child(3){width:min(100%,96px)}
 .kontrol.play svg{width:43%;height:43%}
 .ses{
  display:flex;align-items:center;gap:11px;width:100%;padding-top:1px;
@@ -159,15 +163,18 @@ svg{display:block}
 .kanal{font-size:12px;color:var(--soluk);margin-top:3px}
 
 @media(max-width:430px){
- .ust{height:60px}
- .ust-btn{width:54px;height:54px;border-radius:18px;box-shadow:4px 4px 0 var(--lac)}
- .kapak{width:min(76vw,360px);border-width:4px;border-radius:24px;box-shadow:6px 6px 0 var(--lac)}
- .ana{gap:10px}
- .sarki{font-size:clamp(23px,6vw,30px)}
- .sanatci{font-size:15px}
- .kontroller{gap:4px}
- .kontrol{border-width:3px;box-shadow:4px 4px 0 var(--lac)}
- .kontrol.play{box-shadow:5px 5px 0 var(--lac)}
+  .ust{height:60px}
+  .ust-btn{width:54px;height:54px;border-radius:18px;box-shadow:4px 4px 0 var(--lac)}
+  .kapak{width:min(92vw,430px);border-width:4px;border-radius:24px;box-shadow:6px 6px 0 var(--lac);transform:translateY(-25px)}
+  .ana{gap:12px}
+  .sarki{font-size:30px}
+  .sanatci{font-size:15px}
+  .kontroller{gap:4px}
+  .kontrol{border-width:3px;box-shadow:4px 4px 0 var(--lac);width:min(100%,48px)}
+  .kontroller .kontrol:nth-child(2),
+  .kontroller .kontrol:nth-child(4){width:min(100%,56px)}
+  .kontroller .kontrol:nth-child(3){width:min(100%,88px)}
+  .kontrol.play{box-shadow:5px 5px 0 var(--lac)}
 }
 @media(max-height:720px){
  .ana{gap:7px}
@@ -222,14 +229,6 @@ svg{display:block}
      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 5v14h2V5h-2Zm-10 0v14l10-7L7 5Z"/></svg>
     </button>
    </div>
-
-   <div class="ses">
-    <svg viewBox="0 0 24 24" fill="currentColor">
-     <path d="M4 9v6h4l5 4V5L8 9H4Z"/>
-     <path d="M16 9.2a4.3 4.3 0 0 1 0 5.6M18.5 6.7a8 8 0 0 1 0 10.6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-    <input id="ses" class="volume" type="range" min="0" max="100" value="100">
-   </div>
   </main>
 
   <section id="listePanel" class="liste-panel">
@@ -265,10 +264,23 @@ function sure(s){
  s=Math.floor(s||0);
  return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
 }
+function basligiSigdir(){
+  var el=document.getElementById("sarkiAdi");
+  if(!el)return;
+  var boyut=38;
+  if(window.innerWidth<=430)boyut=30;
+  el.style.fontSize=boyut+"px";
+  while(el.scrollWidth>el.clientWidth && boyut>20){
+    boyut-=1;
+    el.style.fontSize=boyut+"px";
+  }
+}
+
 function ekraniGuncelle(){
  if(!sarkilar.length)return;
  var s=sarkilar[seciliIndex];
  document.getElementById("sarkiAdi").textContent=s.ad||"YouTube Videosu";
+  basligiSigdir();
  document.getElementById("sanatci").textContent=s.sanatci||"YouTube";
  kapakAyarla();
  document.querySelectorAll(".parca").forEach(function(x,i){x.classList.toggle("active",i===seciliIndex)});
@@ -347,6 +359,7 @@ document.getElementById("onceki").onclick=onceki;
 document.getElementById("sonraki").onclick=sonraki;
 document.getElementById("progress").oninput=function(){if(oynatici){var t=oynatici.getDuration();if(t)oynatici.seekTo(t*Number(this.value)/100,true)}};
 document.getElementById("ses").oninput=function(){if(oynatici)oynatici.setVolume(Number(this.value))};
+window.addEventListener("resize",basligiSigdir);
 document.getElementById("listeAc").onclick=function(){document.getElementById("listePanel").classList.add("open")};
 document.getElementById("listeKapat").onclick=function(){document.getElementById("listePanel").classList.remove("open")};
 
