@@ -11,7 +11,7 @@
 window.VIDEOLAR = [
   "https://youtu.be/qucA94Pz4Rk",
 
-  "https://youtu.be/VIDEO_ID_BURAYA",
+  "https://youtu.be/GjRgAJtmfDo",
 
   "https://youtu.be/VIDEO_ID_BURAYA"
 ];
