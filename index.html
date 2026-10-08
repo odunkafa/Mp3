@@ -361,7 +361,8 @@ function bilgileriGetir(){
 }
 function ilk(){
  if(!oynatici||!sarkilar.length)return;
- var id=videoIdBul(sarkilar[0].url);if(id)oynatici.cueVideoById(id);ekraniGuncelle();
+ seciliIndex=Math.floor(Math.random()*sarkilar.length);
+ var id=videoIdBul(sarkilar[seciliIndex].url);if(id)oynatici.cueVideoById(id);ekraniGuncelle();
 }
 function onYouTubeIframeAPIReady(){
  window.ytHazir=true;
