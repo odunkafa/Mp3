@@ -76,7 +76,10 @@ svg{display:block}
 .bilgi{text-align:center;padding:0 5px;min-width:0}
 .sarki{
   font-size:clamp(22px,5.2vw,38px);font-weight:900;line-height:1.08;
-  white-space:nowrap;overflow:hidden;text-overflow:clip;
+  white-space:normal;overflow:hidden;text-overflow:clip;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow-wrap:anywhere;
+  max-height:2.16em;
 }
 .sanatci{
  margin-top:5px;font-size:clamp(14px,2.8vw,19px);
@@ -267,12 +270,12 @@ function sure(s){
 function basligiSigdir(){
   var el=document.getElementById("sarkiAdi");
   if(!el)return;
-  var boyut=38;
-  if(window.innerWidth<=430)boyut=30;
-  el.style.fontSize=boyut+"px";
-  while(el.scrollWidth>el.clientWidth && boyut>20){
-    boyut-=1;
-    el.style.fontSize=boyut+"px";
+  var max=window.innerWidth<=430?30:38;
+  var min=18;
+  el.style.fontSize=max+"px";
+  while(el.scrollHeight>el.clientHeight+1 && max>min){
+    max--;
+    el.style.fontSize=max+"px";
   }
 }
 
