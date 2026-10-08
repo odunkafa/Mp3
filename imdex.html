@@ -1,0 +1,412 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MP3 Çalar</title>
+<style>
+:root{
+ --lac:#17233b;
+ --krem:#fff8e8;
+ --sari:#f7cf62;
+ --zemin:#f3e6c9;
+ --soluk:#6d7480;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{font-family:Arial,Helvetica,sans-serif;color:var(--lac);background:var(--zemin)}
+button,input{font:inherit}
+button{outline:0!important;-webkit-appearance:none;appearance:none}
+button:focus,button:active{outline:0!important}
+#uygulama{
+ position:relative;width:100%;height:100%;min-height:100svh;overflow:hidden;
+ background:var(--zemin);
+}
+#arka{
+ position:absolute;inset:-30px;
+ background-position:center;background-size:cover;
+ filter:blur(24px);transform:scale(1.08);
+ opacity:.48;
+ transition:background-image .25s ease;
+}
+#arka::after{content:"";position:absolute;inset:0;background:rgba(255,248,232,.38)}
+#icerik{
+ position:relative;z-index:2;width:100%;height:100%;
+ padding:max(14px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right))
+         max(14px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));
+ display:flex;flex-direction:column;overflow:hidden;
+}
+.ust{
+ display:flex;align-items:center;justify-content:space-between;
+ height:64px;flex:0 0 auto;
+}
+.ust-sag{display:flex;gap:10px}
+.ust-btn{
+ width:58px;height:58px;border:4px solid var(--lac);border-radius:20px;
+ background:rgba(255,248,232,.92);color:var(--lac);
+ box-shadow:5px 5px 0 var(--lac);display:grid;place-items:center;
+}
+.ust-btn.sari{background:var(--sari)}
+.ust-btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--lac)}
+svg{display:block}
+.ust-btn svg{width:31px;height:31px}
+
+.ana{
+  flex:1;min-height:0;width:min(100%,620px);margin:auto;
+  display:flex;flex-direction:column;justify-content:center;
+  gap:clamp(14px,2.4vh,24px);
+}
+.kapak{
+  width:min(94vw,540px);aspect-ratio:1/1;margin:0 auto;
+  border:4px solid var(--lac);border-radius:27px;overflow:hidden;
+  background:#17233b;box-shadow:7px 7px 0 var(--lac);
+  position:relative;
+  transform:translateY(-32px);
+}
+.kapak img{width:100%;height:100%;object-fit:cover;display:block}
+.kapak::after{
+ content:"";position:absolute;inset:0;
+ box-shadow:inset 0 0 0 1px rgba(255,255,255,.22);
+ pointer-events:none;
+}
+#youtube-player{
+ position:absolute;width:2px;height:2px;left:-10px;top:-10px;
+ opacity:0;pointer-events:none;
+}
+.bilgi{text-align:center;padding:0 5px;min-width:0}
+.sarki{
+  font-size:clamp(22px,5.2vw,38px);font-weight:900;line-height:1.08;
+  white-space:normal;overflow:hidden;text-overflow:clip;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+  overflow-wrap:anywhere;
+  max-height:2.16em;
+}
+.sanatci{
+ margin-top:5px;font-size:clamp(14px,2.8vw,19px);
+ font-weight:700;color:var(--soluk);
+ white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.durum{font-size:11px;font-weight:900;letter-spacing:.8px;color:#7a8089;margin-top:3px}
+
+.zaman{
+ display:flex;justify-content:space-between;font-size:13px;font-weight:900;
+ margin:0 2px 6px;
+}
+.progress{
+ width:100%;height:10px;border:0;border-radius:99px;
+ appearance:none;-webkit-appearance:none;background:#d5d0c6;outline:0;
+}
+.progress::-webkit-slider-thumb{
+ appearance:none;-webkit-appearance:none;width:24px;height:24px;
+ border:0;border-radius:50%;background:var(--lac);
+}
+.progress::-moz-range-thumb{
+ width:24px;height:24px;border:0;border-radius:50%;background:var(--lac);
+}
+.kontroller{
+ display:grid;grid-template-columns:repeat(5,1fr);
+ align-items:center;gap:clamp(5px,2vw,16px);width:100%;
+}
+.kontrol{
+  width:min(100%,52px);aspect-ratio:1;justify-self:center;
+  border:4px solid var(--lac);border-radius:50%;
+  background:rgba(255,248,232,.94);color:var(--lac);
+  box-shadow:5px 5px 0 var(--lac);
+  display:grid;place-items:center;
+}
+.kontrol:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--lac)}
+.kontrol svg{width:39%;height:39%}
+.kontrol.text{font-size:clamp(13px,2.4vw,18px);font-weight:900}
+.kontrol.play{
+  width:min(100%,96px);background:var(--sari);font-size:0;
+}
+.kontroller .kontrol:nth-child(2),
+.kontroller .kontrol:nth-child(4){width:min(100%,60px)}
+.kontroller .kontrol:nth-child(3){width:min(100%,96px)}
+.kontrol.play svg{width:43%;height:43%}
+.ses{
+ display:flex;align-items:center;gap:11px;width:100%;padding-top:1px;
+}
+.ses svg{width:32px;height:32px;flex:0 0 32px}
+.volume{
+ width:100%;height:9px;border:0;border-radius:99px;
+ appearance:none;-webkit-appearance:none;background:#d2cdc4;
+}
+.volume::-webkit-slider-thumb{
+ appearance:none;-webkit-appearance:none;width:27px;height:27px;
+ border:0;border-radius:50%;background:#1980e9;
+}
+.volume::-moz-range-thumb{
+ width:27px;height:27px;border:0;border-radius:50%;background:#1980e9;
+}
+
+
+.liste-arama{
+  display:flex;align-items:center;gap:10px;
+  margin:0 0 14px;
+  border:4px solid var(--lac);border-radius:17px;
+  background:var(--krem);box-shadow:4px 4px 0 var(--lac);
+  padding:0 14px;height:56px;flex:0 0 auto;
+}
+.liste-arama svg{width:25px;height:25px;flex:0 0 25px}
+.liste-arama input{
+  width:100%;height:100%;border:0;outline:0;background:transparent;
+  color:var(--lac);font-size:17px;font-weight:700;
+}
+.liste-arama input::placeholder{color:var(--soluk)}
+
+/* Liste */
+.liste-panel{
+ position:absolute;z-index:20;inset:0;display:none;
+ background:rgba(255,248,232,.98);
+ padding:max(18px,env(safe-area-inset-top)) 18px max(18px,env(safe-area-inset-bottom));
+}
+.liste-panel.open{display:flex;flex-direction:column}
+.liste-ust{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.liste-ust h2{font-size:30px;margin:0;font-weight:900}
+.kapat{
+ width:52px;height:52px;border:4px solid var(--lac);border-radius:17px;
+ background:var(--sari);box-shadow:4px 4px 0 var(--lac);font-size:29px;font-weight:900;
+}
+.liste{overflow:auto;min-height:0;padding:2px 3px 20px}
+.parca{
+ display:block;width:100%;text-align:left;margin:0 0 12px;
+ padding:12px 14px;border:4px solid var(--lac);border-radius:17px;
+ background:var(--krem);box-shadow:4px 4px 0 var(--lac);color:var(--lac);
+}
+.parca.active{background:var(--sari)}
+.parca:active{transform:translate(2px,2px);box-shadow:2px 2px 0 var(--lac)}
+.no{font-size:10px;font-weight:900;opacity:.5}
+.ad{
+  font-size:17px;font-weight:900;margin-top:2px;
+  white-space:normal;overflow:hidden;text-overflow:clip;
+  line-height:1.12;display:-webkit-box;-webkit-box-orient:vertical;
+  -webkit-line-clamp:2;overflow-wrap:anywhere;
+  max-height:2.24em;
+}
+.kanal{font-size:12px;color:var(--soluk);margin-top:3px}
+
+@media(max-width:430px){
+  .ust{height:60px}
+  .ust-btn{width:54px;height:54px;border-radius:18px;box-shadow:4px 4px 0 var(--lac)}
+  .kapak{width:min(92vw,430px);border-width:4px;border-radius:24px;box-shadow:6px 6px 0 var(--lac);transform:translateY(-25px)}
+  .ana{gap:12px}
+  .sarki{font-size:30px}
+  .sanatci{font-size:15px}
+  .kontroller{gap:4px}
+  .kontrol{border-width:3px;box-shadow:4px 4px 0 var(--lac);width:min(100%,48px)}
+  .kontroller .kontrol:nth-child(2),
+  .kontroller .kontrol:nth-child(4){width:min(100%,56px)}
+  .kontroller .kontrol:nth-child(3){width:min(100%,88px)}
+  .kontrol.play{box-shadow:5px 5px 0 var(--lac)}
+}
+@media(max-height:720px){
+ .ana{gap:7px}
+ .kapak{width:min(60vw,300px)}
+ .durum{display:none}
+}
+@media(max-width:350px){
+ .kapak{width:min(66vw,270px)}
+ .kontrol{border-width:3px}
+}
+</style>
+</head>
+<body>
+<div id="uygulama">
+ <div id="arka"></div>
+
+ <div id="icerik">
+  <header class="ust">
+   <button id="listeAc" class="ust-btn sari" type="button" aria-label="Çalma listesi">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
+     <path d="M4 7h16M4 12h16M4 17h16"/>
+    </svg>
+   </button></header>
+
+  <main class="ana">
+   <div class="kapak">
+    <img id="kapakResmi" alt="Şarkı kapağı">
+    <div id="youtube-player"></div>
+   </div>
+
+   <section class="bilgi">
+    <div id="sarkiAdi" class="sarki">Şarkı seçin</div>
+    <div id="sanatci" class="sanatci">YouTube</div>
+    <div id="durum" class="durum">HAZIRLANIYOR...</div>
+   </section>
+
+   <div>
+    <div class="zaman"><span id="gecen">00:00</span><span id="toplam">00:00</span></div>
+    <input id="progress" class="progress" type="range" min="0" max="100" value="0" step=".1">
+   </div>
+
+   <div class="kontroller">
+    <button id="onceki" class="kontrol" type="button" aria-label="Önceki">
+     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 5v14h2V5H5Zm4 7 10 7V5L9 12Z"/></svg>
+    </button>
+    <button id="geri" class="kontrol text" type="button" aria-label="10 saniye geri">−10</button>
+    <button id="oynat" class="kontrol play" type="button" aria-label="Oynat">
+     <svg id="oynatIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7L8 5Z"/></svg>
+    </button>
+    <button id="ileri" class="kontrol text" type="button" aria-label="10 saniye ileri">+10</button>
+    <button id="sonraki" class="kontrol" type="button" aria-label="Sonraki">
+     <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17 5v14h2V5h-2Zm-10 0v14l10-7L7 5Z"/></svg>
+    </button>
+   </div>
+  </main>
+
+  <section id="listePanel" class="liste-panel">
+   <div class="liste-ust">
+    <h2>Çalma Listesi</h2>
+    <button id="listeKapat" class="kapat" type="button">×</button>
+   </div>
+   <div class="liste-arama">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round">
+     <circle cx="11" cy="11" r="7"></circle>
+     <path d="m16.5 16.5 4 4"></path>
+    </svg>
+    <input id="listeArama" type="search" placeholder="Çalma listesinde ara..." autocomplete="off" aria-label="Çalma listesinde ara">
+   </div>
+   <div id="liste" class="liste"></div>
+  </section>
+ </div>
+</div>
+
+<script>
+var oynatici=null,takip=null,seciliIndex=0,sarkilar=[],videoLinkleri=[],listeAramaMetni="";
+window.ytHazir=false;
+
+function videoIdBul(url){
+ if(!url)return "";
+ var s=String(url).trim();
+ if(/^[A-Za-z0-9_-]{11}$/.test(s))return s;
+ var m=s.match(/(?:youtu\.be\/|youtube\.com\/watch\?v=|youtube\.com\/embed\/|youtube\.com\/shorts\/)([A-Za-z0-9_-]{11})/);
+ return m?m[1]:"";
+}
+function kapakAyarla(){
+ if(!sarkilar.length)return;
+ var id=videoIdBul(sarkilar[seciliIndex].url);
+ if(!id)return;
+ var url="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+ document.getElementById("kapakResmi").src=url;
+ document.getElementById("arka").style.backgroundImage="url('"+url+"')";
+}
+function sure(s){
+ s=Math.floor(s||0);
+ return String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0");
+}
+function basligiSigdir(){
+  var el=document.getElementById("sarkiAdi");
+  if(!el)return;
+  var max=window.innerWidth<=430?30:38;
+  var min=18;
+  el.style.fontSize=max+"px";
+  while(el.scrollHeight>el.clientHeight+1 && max>min){
+    max--;
+    el.style.fontSize=max+"px";
+  }
+}
+
+function ekraniGuncelle(){
+ if(!sarkilar.length)return;
+ var s=sarkilar[seciliIndex];
+ document.getElementById("sarkiAdi").textContent=s.ad||"YouTube Videosu";
+  basligiSigdir();
+ document.getElementById("sanatci").textContent=s.sanatci||"YouTube";
+ kapakAyarla();
+ document.querySelectorAll(".parca").forEach(function(x,i){x.classList.toggle("active",i===seciliIndex)});
+}
+function listeyiOlustur(){
+ var box=document.getElementById("liste");box.innerHTML="";
+ var q=listeAramaMetni.trim().toLocaleLowerCase("tr-TR");
+ var bulunan=0;
+ if(!sarkilar.length){
+  box.innerHTML="<div style='font-weight:900;padding:20px'>videolar.js içine YouTube linki ekleyin.</div>";return;
+ }
+ sarkilar.forEach(function(s,i){
+  var ad=(s.ad||"YouTube Videosu").toLocaleLowerCase("tr-TR");
+  var kanal=(s.sanatci||"YouTube").toLocaleLowerCase("tr-TR");
+  if(q && !ad.includes(q) && !kanal.includes(q))return;
+  bulunan++;
+  var b=document.createElement("button");b.type="button";b.className="parca"+(i===seciliIndex?" active":"");
+  var n=document.createElement("div");n.className="no";n.textContent=String(i+1).padStart(2,"0");
+  var a=document.createElement("div");a.className="ad";a.textContent=s.ad||"YouTube Videosu";
+  var k=document.createElement("div");k.className="kanal";k.textContent=s.sanatci||"YouTube";
+  b.append(n,a,k);b.onclick=function(){sarkiAc(i,true)};box.appendChild(b);
+ });
+ if(!bulunan)box.innerHTML="<div style='font-weight:900;padding:20px'>Sonuç bulunamadı.</div>";
+}
+function sarkiAc(i,oynat){
+ if(!sarkilar[i]||!oynatici)return;
+ var id=videoIdBul(sarkilar[i].url);if(!id)return;
+ seciliIndex=i;ekraniGuncelle();
+ document.getElementById("progress").value=0;
+ document.getElementById("gecen").textContent="00:00";
+ document.getElementById("durum").textContent="YÜKLENİYOR...";
+ if(oynat)oynatici.loadVideoById(id);else oynatici.cueVideoById(id);
+ document.getElementById("listePanel").classList.remove("open");
+}
+function sonraki(){if(sarkilar.length)sarkiAc((seciliIndex+1)%sarkilar.length,true)}
+function onceki(){if(sarkilar.length)sarkiAc((seciliIndex-1+sarkilar.length)%sarkilar.length,true)}
+function bilgileriGetir(){
+ videoLinkleri=Array.isArray(window.VIDEOLAR)?window.VIDEOLAR:[];
+ sarkilar=videoLinkleri.map(function(url){return{url:String(url||"").trim(),ad:"YouTube Videosu",sanatci:"YouTube"}}).filter(function(x){return !!videoIdBul(x.url)});
+ listeyiOlustur();ekraniGuncelle();
+ sarkilar.forEach(function(s,i){
+  fetch("https://www.youtube.com/oembed?url="+encodeURIComponent(s.url)+"&format=json")
+   .then(function(r){if(!r.ok)throw Error();return r.json()})
+   .then(function(d){s.ad=d.title||s.ad;s.sanatci=d.author_name||s.sanatci;listeyiOlustur();if(i===seciliIndex)ekraniGuncelle()}).catch(function(){});
+ });
+ if(window.ytHazir)ilk();
+}
+function ilk(){
+ if(!oynatici||!sarkilar.length)return;
+ var id=videoIdBul(sarkilar[0].url);if(id)oynatici.cueVideoById(id);ekraniGuncelle();
+}
+function onYouTubeIframeAPIReady(){
+ window.ytHazir=true;
+ oynatici=new YT.Player("youtube-player",{videoId:"",width:"2",height:"2",
+  playerVars:{controls:0,rel:0,playsinline:1,modestbranding:1},
+  events:{
+   onReady:function(){oynatici.setVolume(100);document.getElementById("durum").textContent="HAZIR";takipBaslat();ilk()},
+   onStateChange:function(e){
+    var icon=document.getElementById("oynatIcon");
+    if(e.data===YT.PlayerState.PLAYING){
+     icon.innerHTML='<path d="M7 5h4v14H7zM13 5h4v14h-4z"/>';
+     document.getElementById("durum").textContent="ÇALIYOR";
+    }else{
+     icon.innerHTML='<path d="M8 5v14l11-7L8 5Z"/>';
+     if(e.data===YT.PlayerState.PAUSED)document.getElementById("durum").textContent="DURAKLATILDI";
+     if(e.data===YT.PlayerState.ENDED){document.getElementById("durum").textContent="BİTTİ";if(sarkilar.length>1)sonraki()}
+    }
+   }
+  }
+ });
+}
+function takipBaslat(){
+ clearInterval(takip);takip=setInterval(function(){
+  if(!oynatici||!oynatici.getDuration)return;
+  var n=oynatici.getCurrentTime(),t=oynatici.getDuration();if(!t)return;
+  document.getElementById("gecen").textContent=sure(n);
+  document.getElementById("toplam").textContent=sure(t);
+  document.getElementById("progress").value=n/t*100;
+ },300);
+}
+document.getElementById("oynat").onclick=function(){if(!oynatici)return;oynatici.getPlayerState()===YT.PlayerState.PLAYING?oynatici.pauseVideo():oynatici.playVideo()};
+document.getElementById("geri").onclick=function(){if(oynatici)oynatici.seekTo(Math.max(0,oynatici.getCurrentTime()-10),true)};
+document.getElementById("ileri").onclick=function(){if(oynatici)oynatici.seekTo(oynatici.getCurrentTime()+10,true)};
+document.getElementById("onceki").onclick=onceki;
+document.getElementById("sonraki").onclick=sonraki;
+document.getElementById("progress").oninput=function(){if(oynatici){var t=oynatici.getDuration();if(t)oynatici.seekTo(t*Number(this.value)/100,true)}};
+window.addEventListener("resize",basligiSigdir);
+document.getElementById("listeAc").onclick=function(){document.getElementById("listePanel").classList.add("open")};
+document.getElementById("listeKapat").onclick=function(){document.getElementById("listePanel").classList.remove("open")};
+
+document.getElementById("listeArama").addEventListener("input",function(){
+ listeAramaMetni=this.value;listeyiOlustur();
+});
+(function(){var s=document.createElement("script");s.src="videolar.js?ts="+Date.now();s.onload=bilgileriGetir;s.onerror=function(){document.getElementById("durum").textContent="LİSTE DOSYASI BULUNAMADI"};document.head.appendChild(s)})();
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
